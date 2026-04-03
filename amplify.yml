@@ -9,7 +9,7 @@ frontend:
   phases:
     build:
       commands:
-        - mkdir ./dist && touch ./dist/index.html
+        - npm run build
   artifacts:
     baseDirectory: dist
     files:

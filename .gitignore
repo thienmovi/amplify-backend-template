@@ -2,6 +2,9 @@
 .amplify
 amplify_outputs*
 amplifyconfiguration*
+public/amplify_outputs.json
 
 # node modules
 node_modules
+dist
+*.tsbuildinfo

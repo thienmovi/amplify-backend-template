@@ -1,4 +1,6 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
+import { createFaceLivenessSession } from "../functions/create-face-liveness-session/resource";
+import { getFaceLivenessSessionResults } from "../functions/get-face-liveness-session-results/resource";
 
 /*== STEP 1 ===============================================================
 The section below creates a Todo database table with a "content" field. Try
@@ -7,6 +9,34 @@ specifies that any user authenticated via an API key can "create", "read",
 "update", and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
+  CreateFaceLivenessSessionResponse: a.customType({
+    sessionId: a.string().required(),
+  }),
+  GetFaceLivenessSessionResultsResponse: a.customType({
+    sessionId: a.string().required(),
+    confidence: a.float(),
+    status: a.string().required(),
+    isLive: a.boolean().required(),
+  }),
+  createFaceLivenessSession: a
+    .mutation()
+    .returns(a.ref("CreateFaceLivenessSessionResponse"))
+    .authorization((allow) => [
+      allow.guest(),
+      allow.authenticated("identityPool"),
+    ])
+    .handler(a.handler.function(createFaceLivenessSession)),
+  getFaceLivenessSessionResults: a
+    .query()
+    .arguments({
+      sessionId: a.string().required(),
+    })
+    .returns(a.ref("GetFaceLivenessSessionResultsResponse"))
+    .authorization((allow) => [
+      allow.guest(),
+      allow.authenticated("identityPool"),
+    ])
+    .handler(a.handler.function(getFaceLivenessSessionResults)),
   Todo: a
     .model({
       content: a.string(),
